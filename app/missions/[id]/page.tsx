@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import { Suspense } from "react";
-import { getMissionById } from "@/lib/mission-store";
+import { getMissionById, simulateNetwork } from "@/lib/mission-store";
 import { getTelemetry, getWaypoints, statusList } from "@/lib/missions";
 import LineChart from "./LineChart";
 import LiveTelemetry from "./LiveTelemetry";
+import { DetailSkeleton } from "../Skeletons";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("th-TH", {
@@ -22,20 +22,21 @@ function formatDuration(min: number) {
   return `${m} นาที`;
 }
 
-// params เป็นข้อมูลจาก URL ต้องอ่านใน Suspense (เพราะเปิด cacheComponents ไว้)
-export default function MissionDetailPage({ params }: PageProps<"/missions/[id]">) {
+// params/searchParams เป็นข้อมูลจาก URL ต้องอ่านใน Suspense (เพราะเปิด cacheComponents ไว้)
+// ระหว่างโหลดแสดง skeleton, ถ้าโหลดพลาดจะไปที่ error.tsx, ถ้าไม่เจอ id ไปที่ not-found.tsx
+export default function MissionDetailPage({ params, searchParams }: PageProps<"/missions/[id]">) {
   return (
-    <Suspense fallback={<p className="p-6">กำลังโหลด...</p>}>
-      {params.then(({ id }) => (
-        <MissionDetail id={id} />
+    <Suspense fallback={<DetailSkeleton />}>
+      {Promise.all([params, searchParams]).then(([{ id }, query]) => (
+        <MissionDetail id={id} demo={typeof query.demo === "string" ? query.demo : undefined} />
       ))}
     </Suspense>
   );
 }
 
-async function MissionDetail({ id }: { id: string }) {
-  // ข้อมูลเปลี่ยนได้ (แก้ไขภารกิจ) ต้องอ่านใหม่ทุกครั้งที่เปิดหน้า
-  await connection();
+async function MissionDetail({ id, demo }: { id: string; demo?: string }) {
+  // จำลองการโหลดข้อมูล (?demo=error จะโหลดพลาดเพื่อดูหน้า error)
+  await simulateNetwork(demo);
   const mission = getMissionById(id);
 
   // ไม่มี id นี้ในข้อมูล -> ไปหน้า not-found.tsx
@@ -78,14 +79,14 @@ async function MissionDetail({ id }: { id: string }) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 text-gray-900">
+    <div className="min-h-screen bg-gray-50 p-4 text-gray-900 sm:p-6">
       <div className="mx-auto max-w-6xl">
         <Link href="/missions" className="text-sm text-blue-600 hover:underline">
           ← กลับไปหน้ารายการภารกิจ
         </Link>
 
         <div className="mb-6 mt-3 flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold">{mission.name}</h1>
+          <h1 className="break-words text-2xl font-bold">{mission.name}</h1>
           <span className={`rounded-full px-3 py-1 text-sm font-medium ${status.className}`}>
             {status.label}
           </span>
@@ -100,17 +101,17 @@ async function MissionDetail({ id }: { id: string }) {
         {/* ข้อมูลทั่วไป */}
         <section className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
           <h2 className="mb-4 text-lg font-semibold">ข้อมูลทั่วไป</h2>
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {info.map((item) => (
               <div key={item.label}>
                 <dt className="text-sm text-gray-500">{item.label}</dt>
-                <dd className="font-medium">{item.value}</dd>
+                <dd className="break-words font-medium">{item.value}</dd>
               </div>
             ))}
           </dl>
           <div className="mt-4 border-t border-gray-200 pt-4">
             <p className="text-sm text-gray-500">หมายเหตุ</p>
-            <p className="whitespace-pre-wrap">{mission.note || "-"}</p>
+            <p className="whitespace-pre-wrap break-words">{mission.note || "-"}</p>
           </div>
         </section>
 

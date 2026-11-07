@@ -1,19 +1,13 @@
-import { connection } from "next/server";
 import { Suspense } from "react";
-import { getAllMissions } from "@/lib/mission-store";
 import MissionList from "./MissionList";
+import { ListSkeleton } from "./Skeletons";
 
 export default function MissionsPage() {
   // ใช้ useSearchParams ใน MissionList เลยต้องครอบด้วย Suspense
+  // ข้อมูลภารกิจโหลดจาก /api/missions ภายใน MissionList (มีสถานะ loading/error/empty ของตัวเอง)
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <MissionListLoader />
+    <Suspense fallback={<ListSkeleton />}>
+      <MissionList />
     </Suspense>
   );
-}
-
-async function MissionListLoader() {
-  // ข้อมูลเปลี่ยนได้ (เพิ่ม/แก้ไขภารกิจ) ต้องอ่านใหม่ทุกครั้งที่เปิดหน้า
-  await connection();
-  return <MissionList missions={getAllMissions()} />;
 }

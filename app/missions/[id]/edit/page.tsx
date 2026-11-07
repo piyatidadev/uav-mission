@@ -1,23 +1,23 @@
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { missionToForm } from "@/lib/mission-form";
-import { getMissionById } from "@/lib/mission-store";
+import { getMissionById, simulateNetwork } from "@/lib/mission-store";
 import MissionForm from "../../MissionForm";
+import { FormSkeleton } from "../../Skeletons";
 
-export default function EditMissionPage({ params }: PageProps<"/missions/[id]/edit">) {
+export default function EditMissionPage({ params, searchParams }: PageProps<"/missions/[id]/edit">) {
   return (
-    <Suspense fallback={<p className="p-6">กำลังโหลด...</p>}>
-      {params.then(({ id }) => (
-        <EditForm id={id} />
+    <Suspense fallback={<FormSkeleton />}>
+      {Promise.all([params, searchParams]).then(([{ id }, query]) => (
+        <EditForm id={id} demo={typeof query.demo === "string" ? query.demo : undefined} />
       ))}
     </Suspense>
   );
 }
 
-async function EditForm({ id }: { id: string }) {
-  // ข้อมูลเปลี่ยนได้ ต้องอ่านใหม่ทุกครั้งที่เปิดหน้า
-  await connection();
+async function EditForm({ id, demo }: { id: string; demo?: string }) {
+  // จำลองการโหลดข้อมูล (?demo=error จะโหลดพลาดเพื่อดูหน้า error)
+  await simulateNetwork(demo);
   const mission = getMissionById(id);
   if (!mission) {
     notFound();

@@ -115,16 +115,16 @@ export default function MissionForm({ missionId, initialData }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 text-gray-900">
+    <div className="min-h-screen bg-gray-50 p-4 text-gray-900 sm:p-6">
       <div className="mx-auto max-w-3xl">
         <button type="button" onClick={handleCancel} className="text-sm text-blue-600 hover:underline">
           ← กลับ
         </button>
-        <h1 className="mb-6 mt-3 text-2xl font-bold">
+        <h1 className="mb-6 mt-3 break-words text-2xl font-bold">
           {isEdit ? `แก้ไขภารกิจ ${missionId}` : "สร้างภารกิจใหม่"}
         </h1>
 
-        <form onSubmit={handleSubmit} noValidate className="space-y-6 rounded-lg border border-gray-200 bg-white p-6">
+        <form onSubmit={handleSubmit} noValidate className="space-y-6 rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
           {errors.form && (
             <p className="rounded bg-red-50 p-3 text-sm text-red-700">{errors.form}</p>
           )}
@@ -201,7 +201,7 @@ export default function MissionForm({ missionId, initialData }: Props) {
 
           {/* Waypoints */}
           <div>
-            <p className="mb-1 font-medium">
+            <p className="mb-2 font-medium">
               พิกัด Waypoints <span className="text-red-600">*</span>
               <span className="ml-2 text-sm font-normal text-gray-500">(อย่างน้อย 2 จุด)</span>
             </p>
@@ -210,9 +210,10 @@ export default function MissionForm({ missionId, initialData }: Props) {
                 const latError = errors[`waypoints.${i}.lat`];
                 const lngError = errors[`waypoints.${i}.lng`];
                 return (
-                  <div key={i} className="flex items-start gap-3">
-                    <span className="w-8 pt-2 text-gray-500">{i + 1}.</span>
-                    <div className="flex-1">
+                  <div key={i} className="flex items-start gap-2 sm:gap-3">
+                    <span className="w-6 shrink-0 pt-2 text-gray-500">{i + 1}.</span>
+                    <div className="grid min-w-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+                    <div>
                       <input
                         type="text"
                         inputMode="decimal"
@@ -225,7 +226,7 @@ export default function MissionForm({ missionId, initialData }: Props) {
                       />
                       <ErrorText message={latError} />
                     </div>
-                    <div className="flex-1">
+                    <div>
                       <input
                         type="text"
                         inputMode="decimal"
@@ -238,10 +239,12 @@ export default function MissionForm({ missionId, initialData }: Props) {
                       />
                       <ErrorText message={lngError} />
                     </div>
+                    </div>
                     <button
                       type="button"
                       onClick={() => removeWaypoint(i)}
-                      className="rounded border border-gray-300 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                      aria-label={`ลบจุดที่ ${i + 1}`}
+                      className="shrink-0 rounded border border-gray-300 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
                     >
                       ลบ
                     </button>
