@@ -4,17 +4,30 @@ export type Mission = {
   id: string;
   name: string;
   drone: string;
-  pilot: string;
-  province: string;
+  pilot?: string;
+  province?: string;
   // พิกัดจุดขึ้นบิน
   lat: number;
   lng: number;
   flightAt: string;
   durationMin: number;
   status: MissionStatus;
+  // ภารกิจที่สร้าง/แก้ไขผ่านฟอร์มจะเก็บ waypoints ไว้เอง ข้อมูลตัวอย่างจะสร้างให้อัตโนมัติ
+  waypoints?: Waypoint[];
+  note?: string;
 };
 
-export const missions: Mission[] = [
+export const droneList = [
+  "AgriDrone T40",
+  "Falcon X2",
+  "Matrice 350 RTK",
+  "Mavic 3 Enterprise",
+  "Phantom Scout",
+  "Sky Hawk-01",
+];
+
+// ข้อมูลตัวอย่างตอนเริ่มต้น (ข้อมูลที่ใช้งานจริงอยู่ใน lib/mission-store.ts)
+export const seedMissions: Mission[] = [
   { id: "MSN-001", name: "สำรวจแปลงนาข้าว สุพรรณบุรี", drone: "AgriDrone T40", pilot: "สมชาย ใจดี", province: "สุพรรณบุรี", lat: 14.474, lng: 100.117, flightAt: "2026-09-02T07:30:00+07:00", durationMin: 42, status: "completed" },
   { id: "MSN-002", name: "ตรวจสอบเสาส่งไฟฟ้าแรงสูง สาย 3", drone: "Matrice 350 RTK", pilot: "วิภา แสงทอง", province: "สระบุรี", lat: 14.53, lng: 100.91, flightAt: "2026-09-05T09:00:00+07:00", durationMin: 75, status: "completed" },
   { id: "MSN-003", name: "ทำแผนที่ 3 มิติ นิคมอุตสาหกรรมอมตะ", drone: "Mavic 3 Enterprise", pilot: "ธนกร ศรีสุข", province: "ชลบุรี", lat: 13.433, lng: 101.02, flightAt: "2026-09-08T10:15:00+07:00", durationMin: 58, status: "completed" },
@@ -51,7 +64,6 @@ export const missions: Mission[] = [
   { id: "MSN-034", name: "ทำแผนที่ภูมิประเทศ น่าน", drone: "Falcon X2", pilot: "ปิยะ วงศ์ไทย", province: "น่าน", lat: 18.783, lng: 100.779, flightAt: "2026-11-28T08:45:00+07:00", durationMin: 105, status: "planned" },
 ];
 
-
 export const statusList: { value: MissionStatus; label: string; className: string }[] = [
   { value: "planned", label: "วางแผนไว้", className: "bg-blue-100 text-blue-800" },
   { value: "in-progress", label: "กำลังบิน", className: "bg-yellow-100 text-yellow-800" },
@@ -59,19 +71,17 @@ export const statusList: { value: MissionStatus; label: string; className: strin
   { value: "failed", label: "ล้มเหลว", className: "bg-red-100 text-red-800" },
 ];
 
-export function getMissionById(id: string) {
-  return missions.find((m) => m.id === id);
-}
-
 export type Waypoint = {
   no: number;
   lat: number;
   lng: number;
-  altitude: number; // เมตร
+  altitude?: number; // เมตร
 };
 
 // สร้างเส้นทางบินแบบสำรวจพื้นที่ (บินไป-กลับเป็นแนว) รอบจุดขึ้นบิน
 export function getWaypoints(mission: Mission): Waypoint[] {
+  if (mission.waypoints) return mission.waypoints;
+
   const offsets = [
     [0, 0, 0],
     [0.004, 0.002, 80],

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { missions, statusList } from "@/lib/missions";
+import { Mission, statusList } from "@/lib/missions";
 
 const PAGE_SIZE = 10;
 
@@ -22,7 +22,7 @@ function formatDuration(min: number) {
   return `${m} นาที`;
 }
 
-export default function MissionList() {
+export default function MissionList({ missions }: { missions: Mission[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -102,7 +102,12 @@ export default function MissionList() {
   return (
     <div className="min-h-screen bg-gray-50 p-6 text-gray-900">
       <div className="mx-auto max-w-6xl">
-        <h1 className="mb-6 text-2xl font-bold">รายการภารกิจ</h1>
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">รายการภารกิจ</h1>
+          <Link href="/missions/new" className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+            + สร้างภารกิจใหม่
+          </Link>
+        </div>
 
         {/* ส่วนค้นหาและตัวกรอง */}
         <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4">

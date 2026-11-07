@@ -1,26 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
-import {
-  getMissionById,
-  getTelemetry,
-  getWaypoints,
-  missions,
-  statusList,
-} from "@/lib/missions";
+import { getMissionById } from "@/lib/mission-store";
+import { getTelemetry, getWaypoints, statusList } from "@/lib/missions";
 import LineChart from "./LineChart";
-
-// สร้างหน้าของทุกภารกิจไว้ล่วงหน้าตอน build
-export function generateStaticParams() {
-  return missions.map((m) => ({ id: m.id }));
-}
-
-export async function generateMetadata({ params }: PageProps<"/missions/[id]">): Promise<Metadata> {
-  const { id } = await params;
-  const mission = getMissionById(id);
-  return { title: mission ? `${mission.name} | UAV Mission` : "ไม่พบภารกิจ | UAV Mission" };
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("th-TH", {
@@ -48,7 +32,9 @@ export default function MissionDetailPage({ params }: PageProps<"/missions/[id]"
   );
 }
 
-function MissionDetail({ id }: { id: string }) {
+async function MissionDetail({ id }: { id: string }) {
+  // ข้อมูลเปลี่ยนได้ (แก้ไขภารกิจ) ต้องอ่านใหม่ทุกครั้งที่เปิดหน้า
+  await connection();
   const mission = getMissionById(id);
 
   // ไม่มี id นี้ในข้อมูล -> ไปหน้า not-found.tsx
@@ -76,10 +62,14 @@ function MissionDetail({ id }: { id: string }) {
     { label: "รหัสภารกิจ", value: mission.id },
     { label: "ชื่อภารกิจ", value: mission.name },
     { label: "โดรน", value: mission.drone },
-    { label: "นักบิน", value: mission.pilot },
-    { label: "จังหวัด", value: mission.province },
+    { label: "นักบิน", value: mission.pilot || "-" },
+    { label: "จังหวัด", value: mission.province || "-" },
     { label: "จุดขึ้นบิน", value: `${mission.lat}, ${mission.lng}` },
     { label: "วันและเวลาที่บิน", value: formatDate(mission.flightAt) },
+    {
+      label: "วันและเวลาสิ้นสุด",
+      value: formatDate(new Date(new Date(mission.flightAt).getTime() + mission.durationMin * 60000).toISOString()),
+    },
     {
       label: mission.status === "planned" ? "ระยะเวลาบิน (ที่วางแผนไว้)" : "ระยะเวลาบิน",
       value: formatDuration(mission.durationMin),
@@ -98,6 +88,12 @@ function MissionDetail({ id }: { id: string }) {
           <span className={`rounded-full px-3 py-1 text-sm font-medium ${status.className}`}>
             {status.label}
           </span>
+          <Link
+            href={`/missions/${mission.id}/edit`}
+            className="ml-auto rounded border border-gray-300 bg-white px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            แก้ไขภารกิจ
+          </Link>
         </div>
 
         {/* ข้อมูลทั่วไป */}
@@ -111,6 +107,10 @@ function MissionDetail({ id }: { id: string }) {
               </div>
             ))}
           </dl>
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <p className="text-sm text-gray-500">หมายเหตุ</p>
+            <p className="whitespace-pre-wrap">{mission.note || "-"}</p>
+          </div>
         </section>
 
         {/* เส้นทางบิน */}
@@ -147,7 +147,7 @@ function MissionDetail({ id }: { id: string }) {
                       </td>
                       <td className="px-3 py-2">{w.lat.toFixed(5)}</td>
                       <td className="px-3 py-2">{w.lng.toFixed(5)}</td>
-                      <td className="px-3 py-2">{w.altitude}</td>
+                      <td className="px-3 py-2">{w.altitude ?? "-"}</td>
                     </tr>
                   ))}
                 </tbody>
