@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { getMissionById } from "@/lib/mission-store";
 import { getTelemetry, getWaypoints, statusList } from "@/lib/missions";
 import LineChart from "./LineChart";
+import LiveTelemetry from "./LiveTelemetry";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("th-TH", {
@@ -112,6 +113,15 @@ async function MissionDetail({ id }: { id: string }) {
             <p className="whitespace-pre-wrap">{mission.note || "-"}</p>
           </div>
         </section>
+
+        {/* ข้อมูลเรียลไทม์ แสดงเฉพาะภารกิจที่กำลังบิน (เริ่มจากค่าล่าสุดของกราฟ) */}
+        {mission.status === "in-progress" && (
+          <LiveTelemetry
+            startBattery={telemetry[telemetry.length - 1]?.battery ?? 100}
+            startAltitude={telemetry[telemetry.length - 1]?.altitude || 100}
+            waypoints={waypoints.map((w) => ({ lat: w.lat, lng: w.lng }))}
+          />
+        )}
 
         {/* เส้นทางบิน */}
         <section className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
