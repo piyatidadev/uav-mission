@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import MultiSelect from "@/app/components/MultiSelect";
 import { Mission, statusList } from "@/lib/missions";
 import { ListRowsSkeleton } from "./Skeletons";
 
@@ -103,16 +104,6 @@ export default function MissionList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
-  function toggleStatus(status: string) {
-    let newStatus;
-    if (selectedStatus.includes(status)) {
-      newStatus = selectedStatus.filter((s) => s !== status);
-    } else {
-      newStatus = [...selectedStatus, status];
-    }
-    updateParams({ status: newStatus.join(","), page: "" });
-  }
-
   function clearFilters() {
     setSearchText("");
     updateParams({ q: "", status: "", page: "" });
@@ -170,24 +161,17 @@ export default function MissionList() {
                   className="w-full rounded border border-gray-300 px-3 py-2"
                 />
               </div>
-              <div>
-                <span className="mb-1 block text-sm font-medium">สถานะ</span>
-                <div className="flex flex-wrap gap-2">
-                  {statusList.map((s) => (
-                    <label
-                      key={s.value}
-                      className="flex cursor-pointer items-center gap-2 rounded border border-gray-300 px-3 py-2 text-sm"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedStatus.includes(s.value)}
-                        onChange={() => toggleStatus(s.value)}
-                      />
-                      {s.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
+              <MultiSelect
+                label="สถานะ"
+                placeholder="ทุกสถานะ"
+                options={statusList}
+                selected={selectedStatus}
+                onChange={(values) => {
+                  // เรียงตามลำดับใน statusList เพื่อให้ URL เหมือนเดิมไม่ว่าจะเลือกอะไรก่อน
+                  const ordered = statusList.map((s) => s.value).filter((v) => values.includes(v));
+                  updateParams({ status: ordered.join(","), page: "" });
+                }}
+              />
               <div>
                 <label htmlFor="sort" className="mb-1 block text-sm font-medium">เรียงตามวันที่บิน</label>
                 <select
