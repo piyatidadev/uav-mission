@@ -1,17 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { missions, MissionStatus } from "@/lib/missions";
+import { missions, statusList } from "@/lib/missions";
 
 const PAGE_SIZE = 10;
-
-const statusList: { value: MissionStatus; label: string; className: string }[] = [
-  { value: "planned", label: "วางแผนไว้", className: "bg-blue-100 text-blue-800" },
-  { value: "in-progress", label: "กำลังบิน", className: "bg-yellow-100 text-yellow-800" },
-  { value: "completed", label: "เสร็จสิ้น", className: "bg-green-100 text-green-800" },
-  { value: "failed", label: "ล้มเหลว", className: "bg-red-100 text-red-800" },
-];
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("th-TH", {
@@ -179,9 +173,17 @@ export default function MissionList() {
               {pageItems.map((m) => {
                 const status = statusList.find((s) => s.value === m.status)!;
                 return (
-                  <tr key={m.id} className="border-t border-gray-200 hover:bg-gray-50">
+                  <tr
+                    key={m.id}
+                    onClick={() => router.push(`/missions/${m.id}`)}
+                    className="cursor-pointer border-t border-gray-200 hover:bg-gray-50"
+                  >
                     <td className="whitespace-nowrap px-4 py-3 text-gray-500">{m.id}</td>
-                    <td className="min-w-48 px-4 py-3 font-medium">{m.name}</td>
+                    <td className="min-w-48 px-4 py-3 font-medium">
+                      <Link href={`/missions/${m.id}`} className="text-blue-700 hover:underline">
+                        {m.name}
+                      </Link>
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3">{m.drone}</td>
                     <td className="whitespace-nowrap px-4 py-3">{formatDate(m.flightAt)}</td>
                     <td className="whitespace-nowrap px-4 py-3">{formatDuration(m.durationMin)}</td>

@@ -4,45 +4,128 @@ export type Mission = {
   id: string;
   name: string;
   drone: string;
+  pilot: string;
+  province: string;
+  // พิกัดจุดขึ้นบิน
+  lat: number;
+  lng: number;
   flightAt: string;
   durationMin: number;
   status: MissionStatus;
 };
 
 export const missions: Mission[] = [
-  { id: "MSN-001", name: "สำรวจแปลงนาข้าว สุพรรณบุรี", drone: "AgriDrone T40", flightAt: "2026-09-02T07:30:00+07:00", durationMin: 42, status: "completed" },
-  { id: "MSN-002", name: "ตรวจสอบเสาส่งไฟฟ้าแรงสูง สาย 3", drone: "Matrice 350 RTK", flightAt: "2026-09-05T09:00:00+07:00", durationMin: 75, status: "completed" },
-  { id: "MSN-003", name: "ทำแผนที่ 3 มิติ นิคมอุตสาหกรรมอมตะ", drone: "Mavic 3 Enterprise", flightAt: "2026-09-08T10:15:00+07:00", durationMin: 58, status: "completed" },
-  { id: "MSN-004", name: "ลาดตระเวนชายฝั่ง ระยอง", drone: "Sky Hawk-01", flightAt: "2026-09-11T06:00:00+07:00", durationMin: 95, status: "failed" },
-  { id: "MSN-005", name: "พ่นสารชีวภัณฑ์ สวนทุเรียน จันทบุรี", drone: "AgriDrone T40", flightAt: "2026-09-14T06:45:00+07:00", durationMin: 35, status: "completed" },
-  { id: "MSN-006", name: "ตรวจรอยร้าวสะพานพระราม 8", drone: "Matrice 350 RTK", flightAt: "2026-09-17T13:30:00+07:00", durationMin: 64, status: "completed" },
-  { id: "MSN-007", name: "สำรวจพื้นที่ไฟป่า ดอยสุเทพ", drone: "Falcon X2", flightAt: "2026-09-20T15:00:00+07:00", durationMin: 110, status: "completed" },
-  { id: "MSN-008", name: "ถ่ายภาพมุมสูงโครงการคอนโด บางนา", drone: "Mavic 3 Enterprise", flightAt: "2026-09-23T16:20:00+07:00", durationMin: 25, status: "completed" },
-  { id: "MSN-009", name: "นับจำนวนปศุสัตว์ ฟาร์มโคนม มวกเหล็ก", drone: "Phantom Scout", flightAt: "2026-09-26T08:10:00+07:00", durationMin: 38, status: "failed" },
-  { id: "MSN-010", name: "ตรวจแผงโซลาร์ฟาร์ม ลพบุรี", drone: "Matrice 350 RTK", flightAt: "2026-09-29T11:00:00+07:00", durationMin: 82, status: "completed" },
-  { id: "MSN-011", name: "สำรวจแปลงอ้อย กาญจนบุรี", drone: "AgriDrone T40", flightAt: "2026-10-02T07:00:00+07:00", durationMin: 47, status: "completed" },
-  { id: "MSN-012", name: "ค้นหาผู้สูญหาย อุทยานเขาใหญ่", drone: "Falcon X2", flightAt: "2026-10-04T17:40:00+07:00", durationMin: 130, status: "completed" },
-  { id: "MSN-013", name: "ตรวจสอบท่อส่งก๊าซ ชลบุรี", drone: "Sky Hawk-01", flightAt: "2026-10-07T09:30:00+07:00", durationMin: 120, status: "completed" },
-  { id: "MSN-014", name: "ทำแผนที่น้ำท่วม อยุธยา", drone: "Falcon X2", flightAt: "2026-10-10T08:00:00+07:00", durationMin: 98, status: "failed" },
-  { id: "MSN-015", name: "ตรวจหลังคาโรงงาน แหลมฉบัง", drone: "Mavic 3 Enterprise", flightAt: "2026-10-13T14:00:00+07:00", durationMin: 33, status: "completed" },
-  { id: "MSN-016", name: "สำรวจป่าชายเลน สมุทรสงคราม", drone: "Phantom Scout", flightAt: "2026-10-16T07:20:00+07:00", durationMin: 55, status: "completed" },
-  { id: "MSN-017", name: "ตรวจสอบเสาส่งไฟฟ้าแรงสูง สาย 7", drone: "Matrice 350 RTK", flightAt: "2026-10-19T10:00:00+07:00", durationMin: 70, status: "completed" },
-  { id: "MSN-018", name: "พ่นปุ๋ยแปลงข้าวโพด เพชรบูรณ์", drone: "AgriDrone T40", flightAt: "2026-10-22T06:30:00+07:00", durationMin: 40, status: "completed" },
-  { id: "MSN-019", name: "ลาดตระเวนชายแดน ตาก", drone: "Sky Hawk-01", flightAt: "2026-10-25T05:45:00+07:00", durationMin: 145, status: "failed" },
-  { id: "MSN-020", name: "ถ่ายทำสารคดี เกาะพีพี", drone: "Mavic 3 Enterprise", flightAt: "2026-10-28T16:00:00+07:00", durationMin: 28, status: "completed" },
-  { id: "MSN-021", name: "สำรวจเขื่อนศรีนครินทร์", drone: "Falcon X2", flightAt: "2026-10-31T09:15:00+07:00", durationMin: 88, status: "completed" },
-  { id: "MSN-022", name: "ตรวจกังหันลม ห้วยบง", drone: "Matrice 350 RTK", flightAt: "2026-11-03T08:30:00+07:00", durationMin: 66, status: "completed" },
-  { id: "MSN-023", name: "นับต้นปาล์มน้ำมัน กระบี่", drone: "Phantom Scout", flightAt: "2026-11-05T07:50:00+07:00", durationMin: 52, status: "completed" },
-  { id: "MSN-024", name: "ลาดตระเวนชายฝั่ง ระยอง", drone: "Sky Hawk-01", flightAt: "2026-11-07T06:00:00+07:00", durationMin: 61, status: "in-progress" },
-  { id: "MSN-025", name: "สำรวจแปลงนาข้าว สุพรรณบุรี รอบ 2", drone: "AgriDrone T40", flightAt: "2026-11-07T08:15:00+07:00", durationMin: 22, status: "in-progress" },
-  { id: "MSN-026", name: "ตรวจรอยร้าวสะพานพระราม 9", drone: "Matrice 350 RTK", flightAt: "2026-11-07T09:40:00+07:00", durationMin: 12, status: "in-progress" },
-  { id: "MSN-027", name: "ทำแผนที่ 3 มิติ ชุมชนคลองเตย", drone: "Mavic 3 Enterprise", flightAt: "2026-11-10T10:00:00+07:00", durationMin: 50, status: "planned" },
-  { id: "MSN-028", name: "ตรวจแผงโซลาร์ฟาร์ม นครราชสีมา", drone: "Matrice 350 RTK", flightAt: "2026-11-12T09:00:00+07:00", durationMin: 90, status: "planned" },
-  { id: "MSN-029", name: "สำรวจพื้นที่ไฟป่า ดอยอินทนนท์", drone: "Falcon X2", flightAt: "2026-11-15T15:30:00+07:00", durationMin: 120, status: "planned" },
-  { id: "MSN-030", name: "พ่นสารชีวภัณฑ์ สวนลำไย ลำพูน", drone: "AgriDrone T40", flightAt: "2026-11-18T06:30:00+07:00", durationMin: 45, status: "planned" },
-  { id: "MSN-031", name: "ตรวจสอบท่อส่งก๊าซ ระยอง", drone: "Sky Hawk-01", flightAt: "2026-11-21T08:00:00+07:00", durationMin: 115, status: "planned" },
-  { id: "MSN-032", name: "สำรวจแนวปะการัง เกาะเต่า", drone: "Phantom Scout", flightAt: "2026-11-24T07:30:00+07:00", durationMin: 40, status: "planned" },
-  { id: "MSN-033", name: "ถ่ายภาพมุมสูงงานลอยกระทง สุโขทัย", drone: "Mavic 3 Enterprise", flightAt: "2026-11-24T19:00:00+07:00", durationMin: 30, status: "planned" },
-  { id: "MSN-034", name: "ทำแผนที่ภูมิประเทศ น่าน", drone: "Falcon X2", flightAt: "2026-11-28T08:45:00+07:00", durationMin: 105, status: "planned" },
+  { id: "MSN-001", name: "สำรวจแปลงนาข้าว สุพรรณบุรี", drone: "AgriDrone T40", pilot: "สมชาย ใจดี", province: "สุพรรณบุรี", lat: 14.474, lng: 100.117, flightAt: "2026-09-02T07:30:00+07:00", durationMin: 42, status: "completed" },
+  { id: "MSN-002", name: "ตรวจสอบเสาส่งไฟฟ้าแรงสูง สาย 3", drone: "Matrice 350 RTK", pilot: "วิภา แสงทอง", province: "สระบุรี", lat: 14.53, lng: 100.91, flightAt: "2026-09-05T09:00:00+07:00", durationMin: 75, status: "completed" },
+  { id: "MSN-003", name: "ทำแผนที่ 3 มิติ นิคมอุตสาหกรรมอมตะ", drone: "Mavic 3 Enterprise", pilot: "ธนกร ศรีสุข", province: "ชลบุรี", lat: 13.433, lng: 101.02, flightAt: "2026-09-08T10:15:00+07:00", durationMin: 58, status: "completed" },
+  { id: "MSN-004", name: "ลาดตระเวนชายฝั่ง ระยอง", drone: "Sky Hawk-01", pilot: "ปิยะ วงศ์ไทย", province: "ระยอง", lat: 12.68, lng: 101.28, flightAt: "2026-09-11T06:00:00+07:00", durationMin: 95, status: "failed" },
+  { id: "MSN-005", name: "พ่นสารชีวภัณฑ์ สวนทุเรียน จันทบุรี", drone: "AgriDrone T40", pilot: "กมล รักษ์ฟ้า", province: "จันทบุรี", lat: 12.611, lng: 102.104, flightAt: "2026-09-14T06:45:00+07:00", durationMin: 35, status: "completed" },
+  { id: "MSN-006", name: "ตรวจรอยร้าวสะพานพระราม 8", drone: "Matrice 350 RTK", pilot: "สมชาย ใจดี", province: "กรุงเทพมหานคร", lat: 13.771, lng: 100.49, flightAt: "2026-09-17T13:30:00+07:00", durationMin: 64, status: "completed" },
+  { id: "MSN-007", name: "สำรวจพื้นที่ไฟป่า ดอยสุเทพ", drone: "Falcon X2", pilot: "วิภา แสงทอง", province: "เชียงใหม่", lat: 18.805, lng: 98.922, flightAt: "2026-09-20T15:00:00+07:00", durationMin: 110, status: "completed" },
+  { id: "MSN-008", name: "ถ่ายภาพมุมสูงโครงการคอนโด บางนา", drone: "Mavic 3 Enterprise", pilot: "ธนกร ศรีสุข", province: "กรุงเทพมหานคร", lat: 13.668, lng: 100.634, flightAt: "2026-09-23T16:20:00+07:00", durationMin: 25, status: "completed" },
+  { id: "MSN-009", name: "นับจำนวนปศุสัตว์ ฟาร์มโคนม มวกเหล็ก", drone: "Phantom Scout", pilot: "ปิยะ วงศ์ไทย", province: "สระบุรี", lat: 14.655, lng: 101.199, flightAt: "2026-09-26T08:10:00+07:00", durationMin: 38, status: "failed" },
+  { id: "MSN-010", name: "ตรวจแผงโซลาร์ฟาร์ม ลพบุรี", drone: "Matrice 350 RTK", pilot: "กมล รักษ์ฟ้า", province: "ลพบุรี", lat: 14.799, lng: 100.654, flightAt: "2026-09-29T11:00:00+07:00", durationMin: 82, status: "completed" },
+  { id: "MSN-011", name: "สำรวจแปลงอ้อย กาญจนบุรี", drone: "AgriDrone T40", pilot: "สมชาย ใจดี", province: "กาญจนบุรี", lat: 14.02, lng: 99.532, flightAt: "2026-10-02T07:00:00+07:00", durationMin: 47, status: "completed" },
+  { id: "MSN-012", name: "ค้นหาผู้สูญหาย อุทยานเขาใหญ่", drone: "Falcon X2", pilot: "วิภา แสงทอง", province: "นครราชสีมา", lat: 14.439, lng: 101.372, flightAt: "2026-10-04T17:40:00+07:00", durationMin: 130, status: "completed" },
+  { id: "MSN-013", name: "ตรวจสอบท่อส่งก๊าซ ชลบุรี", drone: "Sky Hawk-01", pilot: "ธนกร ศรีสุข", province: "ชลบุรี", lat: 13.361, lng: 100.984, flightAt: "2026-10-07T09:30:00+07:00", durationMin: 120, status: "completed" },
+  { id: "MSN-014", name: "ทำแผนที่น้ำท่วม อยุธยา", drone: "Falcon X2", pilot: "ปิยะ วงศ์ไทย", province: "พระนครศรีอยุธยา", lat: 14.353, lng: 100.568, flightAt: "2026-10-10T08:00:00+07:00", durationMin: 98, status: "failed" },
+  { id: "MSN-015", name: "ตรวจหลังคาโรงงาน แหลมฉบัง", drone: "Mavic 3 Enterprise", pilot: "กมล รักษ์ฟ้า", province: "ชลบุรี", lat: 13.083, lng: 100.883, flightAt: "2026-10-13T14:00:00+07:00", durationMin: 33, status: "completed" },
+  { id: "MSN-016", name: "สำรวจป่าชายเลน สมุทรสงคราม", drone: "Phantom Scout", pilot: "สมชาย ใจดี", province: "สมุทรสงคราม", lat: 13.409, lng: 99.998, flightAt: "2026-10-16T07:20:00+07:00", durationMin: 55, status: "completed" },
+  { id: "MSN-017", name: "ตรวจสอบเสาส่งไฟฟ้าแรงสูง สาย 7", drone: "Matrice 350 RTK", pilot: "วิภา แสงทอง", province: "นครปฐม", lat: 13.819, lng: 100.062, flightAt: "2026-10-19T10:00:00+07:00", durationMin: 70, status: "completed" },
+  { id: "MSN-018", name: "พ่นปุ๋ยแปลงข้าวโพด เพชรบูรณ์", drone: "AgriDrone T40", pilot: "ธนกร ศรีสุข", province: "เพชรบูรณ์", lat: 16.419, lng: 101.16, flightAt: "2026-10-22T06:30:00+07:00", durationMin: 40, status: "completed" },
+  { id: "MSN-019", name: "ลาดตระเวนชายแดน ตาก", drone: "Sky Hawk-01", pilot: "ปิยะ วงศ์ไทย", province: "ตาก", lat: 16.713, lng: 98.571, flightAt: "2026-10-25T05:45:00+07:00", durationMin: 145, status: "failed" },
+  { id: "MSN-020", name: "ถ่ายทำสารคดี เกาะพีพี", drone: "Mavic 3 Enterprise", pilot: "กมล รักษ์ฟ้า", province: "กระบี่", lat: 7.74, lng: 98.778, flightAt: "2026-10-28T16:00:00+07:00", durationMin: 28, status: "completed" },
+  { id: "MSN-021", name: "สำรวจเขื่อนศรีนครินทร์", drone: "Falcon X2", pilot: "สมชาย ใจดี", province: "กาญจนบุรี", lat: 14.41, lng: 99.13, flightAt: "2026-10-31T09:15:00+07:00", durationMin: 88, status: "completed" },
+  { id: "MSN-022", name: "ตรวจกังหันลม ห้วยบง", drone: "Matrice 350 RTK", pilot: "วิภา แสงทอง", province: "นครราชสีมา", lat: 14.95, lng: 101.83, flightAt: "2026-11-03T08:30:00+07:00", durationMin: 66, status: "completed" },
+  { id: "MSN-023", name: "นับต้นปาล์มน้ำมัน กระบี่", drone: "Phantom Scout", pilot: "ธนกร ศรีสุข", province: "กระบี่", lat: 8.086, lng: 98.906, flightAt: "2026-11-05T07:50:00+07:00", durationMin: 52, status: "completed" },
+  { id: "MSN-024", name: "ลาดตระเวนชายฝั่ง ระยอง", drone: "Sky Hawk-01", pilot: "ปิยะ วงศ์ไทย", province: "ระยอง", lat: 12.68, lng: 101.28, flightAt: "2026-11-07T06:00:00+07:00", durationMin: 61, status: "in-progress" },
+  { id: "MSN-025", name: "สำรวจแปลงนาข้าว สุพรรณบุรี รอบ 2", drone: "AgriDrone T40", pilot: "กมล รักษ์ฟ้า", province: "สุพรรณบุรี", lat: 14.474, lng: 100.117, flightAt: "2026-11-07T08:15:00+07:00", durationMin: 22, status: "in-progress" },
+  { id: "MSN-026", name: "ตรวจรอยร้าวสะพานพระราม 9", drone: "Matrice 350 RTK", pilot: "สมชาย ใจดี", province: "กรุงเทพมหานคร", lat: 13.681, lng: 100.528, flightAt: "2026-11-07T09:40:00+07:00", durationMin: 12, status: "in-progress" },
+  { id: "MSN-027", name: "ทำแผนที่ 3 มิติ ชุมชนคลองเตย", drone: "Mavic 3 Enterprise", pilot: "วิภา แสงทอง", province: "กรุงเทพมหานคร", lat: 13.712, lng: 100.56, flightAt: "2026-11-10T10:00:00+07:00", durationMin: 50, status: "planned" },
+  { id: "MSN-028", name: "ตรวจแผงโซลาร์ฟาร์ม นครราชสีมา", drone: "Matrice 350 RTK", pilot: "ธนกร ศรีสุข", province: "นครราชสีมา", lat: 14.97, lng: 102.102, flightAt: "2026-11-12T09:00:00+07:00", durationMin: 90, status: "planned" },
+  { id: "MSN-029", name: "สำรวจพื้นที่ไฟป่า ดอยอินทนนท์", drone: "Falcon X2", pilot: "ปิยะ วงศ์ไทย", province: "เชียงใหม่", lat: 18.588, lng: 98.487, flightAt: "2026-11-15T15:30:00+07:00", durationMin: 120, status: "planned" },
+  { id: "MSN-030", name: "พ่นสารชีวภัณฑ์ สวนลำไย ลำพูน", drone: "AgriDrone T40", pilot: "กมล รักษ์ฟ้า", province: "ลำพูน", lat: 18.574, lng: 99.008, flightAt: "2026-11-18T06:30:00+07:00", durationMin: 45, status: "planned" },
+  { id: "MSN-031", name: "ตรวจสอบท่อส่งก๊าซ ระยอง", drone: "Sky Hawk-01", pilot: "สมชาย ใจดี", province: "ระยอง", lat: 12.708, lng: 101.15, flightAt: "2026-11-21T08:00:00+07:00", durationMin: 115, status: "planned" },
+  { id: "MSN-032", name: "สำรวจแนวปะการัง เกาะเต่า", drone: "Phantom Scout", pilot: "วิภา แสงทอง", province: "สุราษฎร์ธานี", lat: 10.092, lng: 99.838, flightAt: "2026-11-24T07:30:00+07:00", durationMin: 40, status: "planned" },
+  { id: "MSN-033", name: "ถ่ายภาพมุมสูงงานลอยกระทง สุโขทัย", drone: "Mavic 3 Enterprise", pilot: "ธนกร ศรีสุข", province: "สุโขทัย", lat: 17.017, lng: 99.703, flightAt: "2026-11-24T19:00:00+07:00", durationMin: 30, status: "planned" },
+  { id: "MSN-034", name: "ทำแผนที่ภูมิประเทศ น่าน", drone: "Falcon X2", pilot: "ปิยะ วงศ์ไทย", province: "น่าน", lat: 18.783, lng: 100.779, flightAt: "2026-11-28T08:45:00+07:00", durationMin: 105, status: "planned" },
 ];
 
+
+export const statusList: { value: MissionStatus; label: string; className: string }[] = [
+  { value: "planned", label: "วางแผนไว้", className: "bg-blue-100 text-blue-800" },
+  { value: "in-progress", label: "กำลังบิน", className: "bg-yellow-100 text-yellow-800" },
+  { value: "completed", label: "เสร็จสิ้น", className: "bg-green-100 text-green-800" },
+  { value: "failed", label: "ล้มเหลว", className: "bg-red-100 text-red-800" },
+];
+
+export function getMissionById(id: string) {
+  return missions.find((m) => m.id === id);
+}
+
+export type Waypoint = {
+  no: number;
+  lat: number;
+  lng: number;
+  altitude: number; // เมตร
+};
+
+// สร้างเส้นทางบินแบบสำรวจพื้นที่ (บินไป-กลับเป็นแนว) รอบจุดขึ้นบิน
+export function getWaypoints(mission: Mission): Waypoint[] {
+  const offsets = [
+    [0, 0, 0],
+    [0.004, 0.002, 80],
+    [0.008, 0.002, 120],
+    [0.008, 0.008, 120],
+    [0.004, 0.008, 120],
+    [0.004, 0.014, 100],
+    [0.008, 0.014, 100],
+    [0, 0, 0],
+  ];
+  return offsets.map(([dLat, dLng, alt], i) => ({
+    no: i + 1,
+    lat: Number((mission.lat + dLat).toFixed(5)),
+    lng: Number((mission.lng + dLng).toFixed(5)),
+    altitude: alt,
+  }));
+}
+
+export type TelemetryPoint = {
+  minute: number;
+  altitude: number; // เมตร
+  battery: number; // เปอร์เซ็นต์
+};
+
+// ข้อมูลระดับความสูงและแบตเตอรี่ทุก ๆ 5 นาที (ภารกิจที่ยังไม่บินจะไม่มีข้อมูล)
+export function getTelemetry(mission: Mission): TelemetryPoint[] {
+  if (mission.status === "planned") return [];
+
+  const total = mission.durationMin;
+  const points: TelemetryPoint[] = [];
+  for (let minute = 0; minute <= total; minute += 5) {
+    points.push({ minute, altitude: 0, battery: 0 });
+  }
+  if (points[points.length - 1].minute !== total) {
+    points.push({ minute: total, altitude: 0, battery: 0 });
+  }
+
+  // ภารกิจที่ล้มเหลวแบตจะลดเร็วกว่าปกติ
+  const batteryUsed = mission.status === "failed" ? 92 : 70;
+
+  return points.map((p, i) => {
+    const progress = total === 0 ? 0 : p.minute / total;
+    let altitude = 120;
+    if (i === 0) altitude = 0;
+    else if (p.minute < 5) altitude = 60;
+    // ภารกิจที่จบแล้วต้องลงจอดที่ความสูง 0
+    if (mission.status !== "in-progress" && i === points.length - 1) altitude = 0;
+    // ความสูงขึ้นลงเล็กน้อยให้ดูเป็นข้อมูลจริง
+    if (altitude === 120) altitude = 120 - ((i * 7) % 25);
+
+    return {
+      minute: p.minute,
+      altitude,
+      battery: Math.round(100 - batteryUsed * progress),
+    };
+  });
+}
