@@ -6,11 +6,11 @@ import { missions, MissionStatus } from "@/lib/missions";
 
 const PAGE_SIZE = 10;
 
-const statusList: { value: MissionStatus; label: string; color: string }[] = [
-  { value: "planned", label: "วางแผนไว้", color: "blue" },
-  { value: "in-progress", label: "กำลังบิน", color: "orange" },
-  { value: "completed", label: "เสร็จสิ้น", color: "green" },
-  { value: "failed", label: "ล้มเหลว", color: "red" },
+const statusList: { value: MissionStatus; label: string; className: string }[] = [
+  { value: "planned", label: "วางแผนไว้", className: "bg-blue-100 text-blue-800" },
+  { value: "in-progress", label: "กำลังบิน", className: "bg-yellow-100 text-yellow-800" },
+  { value: "completed", label: "เสร็จสิ้น", className: "bg-green-100 text-green-800" },
+  { value: "failed", label: "ล้มเหลว", className: "bg-red-100 text-red-800" },
 ];
 
 function formatDate(iso: string) {
@@ -75,6 +75,11 @@ export default function MissionList() {
     updateParams({ status: newStatus.join(","), page: "" });
   }
 
+  function clearFilters() {
+    setSearchText("");
+    router.replace(pathname);
+  }
+
   // ค้นหา + กรอง
   const keyword = q.toLowerCase();
   const filtered = missions.filter((m) => {
@@ -101,107 +106,126 @@ export default function MissionList() {
   );
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>รายการภารกิจ</h1>
+    <div className="min-h-screen bg-gray-50 p-6 text-gray-900">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-6 text-2xl font-bold">รายการภารกิจ</h1>
 
-      <div style={{ marginBottom: 10 }}>
-        <input
-          type="text"
-          placeholder="ค้นหาชื่อภารกิจหรือชื่อโดรน"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ border: "1px solid gray", padding: 4, width: 300 }}
-        />
-      </div>
+        {/* ส่วนค้นหาและตัวกรอง */}
+        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+          <div className="mb-4 flex flex-wrap gap-4">
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium">ค้นหา</label>
+              <input
+                type="text"
+                placeholder="พิมพ์ชื่อภารกิจหรือชื่อโดรน"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="w-full rounded border border-gray-300 px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium">เรียงตามวันที่บิน</label>
+              <select
+                value={sort}
+                onChange={(e) => updateParams({ sort: e.target.value, page: "" })}
+                className="rounded border border-gray-300 bg-white px-3 py-2"
+              >
+                <option value="desc">ใหม่ไปเก่า</option>
+                <option value="asc">เก่าไปใหม่</option>
+              </select>
+            </div>
+          </div>
 
-      <div style={{ marginBottom: 10 }}>
-        สถานะ:{" "}
-        {statusList.map((s) => (
-          <label key={s.value} style={{ marginRight: 10 }}>
-            <input
-              type="checkbox"
-              checked={selectedStatus.includes(s.value)}
-              onChange={() => toggleStatus(s.value)}
-            />{" "}
-            {s.label}
-          </label>
-        ))}
-      </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mr-2 text-sm font-medium">สถานะ:</span>
+            {statusList.map((s) => (
+              <label
+                key={s.value}
+                className="flex cursor-pointer items-center gap-2 rounded border border-gray-300 px-3 py-1 text-sm"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedStatus.includes(s.value)}
+                  onChange={() => toggleStatus(s.value)}
+                />
+                {s.label}
+              </label>
+            ))}
+            <button
+              onClick={clearFilters}
+              className="ml-auto text-sm text-blue-600 hover:underline"
+            >
+              ล้างตัวกรอง
+            </button>
+          </div>
+        </div>
 
-      <div style={{ marginBottom: 10 }}>
-        เรียงตามวันที่บิน:{" "}
-        <select
-          value={sort}
-          onChange={(e) => updateParams({ sort: e.target.value, page: "" })}
-          style={{ border: "1px solid gray" }}
-        >
-          <option value="desc">ใหม่ไปเก่า</option>
-          <option value="asc">เก่าไปใหม่</option>
-        </select>
-      </div>
+        <p className="mb-2 text-sm text-gray-600">พบ {sorted.length} รายการ</p>
 
-      <p>พบ {sorted.length} รายการ</p>
-
-      <table border={1} cellPadding={6} style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th>รหัสภารกิจ</th>
-            <th>ชื่อภารกิจ</th>
-            <th>โดรน</th>
-            <th>วันและเวลาที่บิน</th>
-            <th>ระยะเวลาบิน</th>
-            <th>สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pageItems.map((m) => {
-            const status = statusList.find((s) => s.value === m.status)!;
-            return (
-              <tr key={m.id}>
-                <td>{m.id}</td>
-                <td>{m.name}</td>
-                <td>{m.drone}</td>
-                <td>{formatDate(m.flightAt)}</td>
-                <td>{formatDuration(m.durationMin)}</td>
-                <td>
-                  <span
-                    style={{
-                      backgroundColor: status.color,
-                      color: "white",
-                      padding: "2px 8px",
-                      borderRadius: 4,
-                    }}
-                  >
-                    {status.label}
-                  </span>
-                </td>
+        {/* ตาราง */}
+        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="whitespace-nowrap px-4 py-3">รหัสภารกิจ</th>
+                <th className="whitespace-nowrap px-4 py-3">ชื่อภารกิจ</th>
+                <th className="whitespace-nowrap px-4 py-3">โดรน</th>
+                <th className="whitespace-nowrap px-4 py-3">วันและเวลาที่บิน</th>
+                <th className="whitespace-nowrap px-4 py-3">ระยะเวลาบิน</th>
+                <th className="whitespace-nowrap px-4 py-3">สถานะ</th>
               </tr>
-            );
-          })}
-          {pageItems.length === 0 && (
-            <tr>
-              <td colSpan={6}>ไม่พบข้อมูล</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {pageItems.map((m) => {
+                const status = statusList.find((s) => s.value === m.status)!;
+                return (
+                  <tr key={m.id} className="border-t border-gray-200 hover:bg-gray-50">
+                    <td className="whitespace-nowrap px-4 py-3 text-gray-500">{m.id}</td>
+                    <td className="min-w-48 px-4 py-3 font-medium">{m.name}</td>
+                    <td className="whitespace-nowrap px-4 py-3">{m.drone}</td>
+                    <td className="whitespace-nowrap px-4 py-3">{formatDate(m.flightAt)}</td>
+                    <td className="whitespace-nowrap px-4 py-3">{formatDuration(m.durationMin)}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${status.className}`}
+                      >
+                        {status.label}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+              {pageItems.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    ไม่พบข้อมูล
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-      <div style={{ marginTop: 10 }}>
-        <button style={{ border: "1px solid gray", padding: "2px 8px" }}
-          disabled={currentPage <= 1}
-          onClick={() => updateParams({ page: String(currentPage - 1) })}
-        >
-          ก่อนหน้า
-        </button>
-        <span style={{ margin: "0 10px" }}>
-          หน้า {currentPage} / {totalPages}
-        </span>
-        <button style={{ border: "1px solid gray", padding: "2px 8px" }}
-          disabled={currentPage >= totalPages}
-          onClick={() => updateParams({ page: String(currentPage + 1) })}
-        >
-          ถัดไป
-        </button>
+        {/* แบ่งหน้า */}
+        <div className="mt-4 flex items-center justify-center gap-4">
+          <button
+            disabled={currentPage <= 1}
+            onClick={() => updateParams({ page: String(currentPage - 1) })}
+            className="rounded border border-gray-300 bg-white px-4 py-2 text-sm disabled:opacity-40"
+          >
+            ก่อนหน้า
+          </button>
+          <span className="text-sm">
+            หน้า {currentPage} / {totalPages}
+          </span>
+          <button
+            disabled={currentPage >= totalPages}
+            onClick={() => updateParams({ page: String(currentPage + 1) })}
+            className="rounded border border-gray-300 bg-white px-4 py-2 text-sm disabled:opacity-40"
+          >
+            ถัดไป
+          </button>
+        </div>
       </div>
     </div>
   );

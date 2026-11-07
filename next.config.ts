@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  // เข้า / แล้วพาไปหน้ารายการภารกิจ
+  async redirects() {
+    return [{ source: "/", destination: "/missions", permanent: false }];
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {
